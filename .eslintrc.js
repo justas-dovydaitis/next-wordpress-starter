@@ -34,5 +34,6 @@ module.exports = {
     'react/react-in-jsx-scope': 'off',
     '@next/next/no-img-element': 'off',
     'react/jsx-filename-extension': ['warn', { extensions: ['.tsx'] }],
+    '@typescript-eslint/no-var-requires': 0,
   },
 };
