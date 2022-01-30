@@ -11,6 +11,7 @@ import Section from 'components/Section';
 
 import styles from './Nav.module.scss';
 import NavListItem from 'components/NavListItem';
+import ThemeSwitch from 'components/ThemeSwitch';
 
 const SEARCH_VISIBLE = 'visible';
 const SEARCH_HIDDEN = 'hidden';
@@ -230,6 +231,7 @@ const Nav = () => {
             </form>
           )}
         </div>
+        <ThemeSwitch />
       </Section>
     </nav>
   );

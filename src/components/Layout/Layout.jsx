@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Helmet } from 'react-helmet';
 import styles from './Layout.module.scss';
 
@@ -8,8 +9,9 @@ import { helmetSettingsFromMetadata } from 'lib/site';
 import Nav from 'components/Nav';
 import Main from 'components/Main';
 import Footer from 'components/Footer';
+import { FaTimes } from 'react-icons/fa';
 
-const Layout = ({ children }) => {
+const Layout = ({ children, isPreview }) => {
   const router = useRouter();
   const { asPath } = router;
 
@@ -63,7 +65,14 @@ const Layout = ({ children }) => {
   return (
     <div className={styles.layoutContainer}>
       <Helmet {...helmetSettings} />
-
+      {isPreview && (
+        <div className="w-full justify-center bg-red-400 flex">
+          -Preview Mode-{' '}
+          <Link href="/api/exit-preview">
+            <FaTimes className="cursor-pointer" size={'1.5rem'} />
+          </Link>
+        </div>
+      )}
       <Nav />
 
       <Main>{children}</Main>

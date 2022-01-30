@@ -19,7 +19,7 @@ import FeaturedImage from 'components/FeaturedImage';
 
 import styles from 'styles/pages/Post.module.scss';
 
-export default function Post({ post, socialImage, relatedPosts }) {
+export default function Post({ post, socialImage, relatedPosts, isPreview }) {
   const {
     title,
     metaTitle,
@@ -67,7 +67,7 @@ export default function Post({ post, socialImage, relatedPosts }) {
   const helmetSettings = helmetSettingsFromMetadata(metadata);
 
   return (
-    <Layout>
+    <Layout isPreview={isPreview}>
       <Helmet {...helmetSettings} />
 
       <ArticleJsonLd post={post} siteTitle={siteMetadata.title} />
@@ -141,8 +141,8 @@ export default function Post({ post, socialImage, relatedPosts }) {
   );
 }
 
-export async function getStaticProps({ params = {} } = {}) {
-  const { post } = await getPostBySlug(params?.slug);
+export async function getStaticProps({ params = {}, preview = false, previewData } = {}) {
+  const { post } = await getPostBySlug(params?.slug, preview, previewData);
 
   const socialImage = `${process.env.OG_IMAGE_DIRECTORY}/${params?.slug}.png`;
 
@@ -152,6 +152,7 @@ export async function getStaticProps({ params = {} } = {}) {
 
   return {
     props: {
+      isPreview: preview,
       post,
       socialImage,
       relatedPosts: {

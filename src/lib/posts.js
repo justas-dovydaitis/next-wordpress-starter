@@ -10,7 +10,10 @@ import {
   QUERY_POSTS_BY_CATEGORY_ID,
   QUERY_POST_SEO_BY_SLUG,
   QUERY_POST_PER_PAGE,
+  QUERY_POST_PREVIEW,
+  QUERY_POST_PREVIEW_BY_SLUG,
 } from 'data/posts';
+import { ApolloLink } from '@apollo/client';
 
 /**
  * postPathBySlug
@@ -24,23 +27,45 @@ export function postPathBySlug(slug) {
  * getPostBySlug
  */
 
-export async function getPostBySlug(slug) {
+export async function getPostBySlug(slug, preview, previewData) {
+  const postPreview = preview && previewData?.post;
+  // The slug may be the id of an unpublished post
+  const isId = Number.isInteger(Number(slug));
+  const isSamePost = isId ? Number(slug) === postPreview.id : slug === postPreview.slug;
+  const isDraft = isSamePost && postPreview?.status === 'draft';
+  const isRevision = isSamePost && postPreview?.status === 'publish';
+
   const apolloClient = getApolloClient();
   const apiHost = new URL(process.env.WORDPRESS_GRAPHQL_ENDPOINT).host;
 
-  let postData;
+  let postData = {};
   let seoData;
 
   try {
-    postData = await apolloClient.query({
+    const x = await apolloClient.query({
       query: QUERY_POST_BY_SLUG,
       variables: {
         slug,
+        id: isDraft ? postPreview.id : slug,
+        idType: isDraft ? 'DATABASE_ID' : 'SLUG',
       },
     });
+    Object.assign(postData, x);
   } catch (e) {
     console.log(`[posts][getPostBySlug] Failed to query post data: ${e.message}`);
     throw e;
+  }
+
+  // Draft posts may not have an slug
+  if (isDraft && !postData.data.post.slug) {
+    postData.data.post.slug = postPreview.id;
+  }
+  // Apply a revision (changes in a published post)
+  if (isRevision && postData.data.post.revisions) {
+    const revision = postData.data.post.revisions.edges[0]?.node;
+
+    if (revision) Object.assign(postData.data.post, revision);
+    delete postData.data.post.revisions;
   }
 
   const post = [postData?.data.post].map(mapPostData)[0];
@@ -355,4 +380,22 @@ export async function getPaginatedPosts(currentPage = 1) {
       pagesCount,
     },
   };
+}
+
+/**
+ * getPreviewPost
+ */
+export async function getPreviewPost(id, idType = 'DATABASE_ID') {
+  const apolloClient = getApolloClient();
+  let postData;
+  try {
+    postData = await apolloClient.query({
+      query: QUERY_POST_PREVIEW,
+      variables: { id, idType },
+    });
+  } catch (e) {
+    console.log(`[posts][getPostBySlug] Failed to query post data: ${e.message}`);
+    throw e;
+  }
+  return postData.data.post;
 }
