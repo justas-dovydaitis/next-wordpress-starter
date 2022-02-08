@@ -13,7 +13,7 @@ interface IComponentProps {
 
 const PostCard = ({ post }: IComponentProps) => {
   return (
-    <div>
+    <div className="bg-zinc-50 dark:bg-[#212225] shadow-lg hover:shadow-xl transition-shadow">
       <div className="mb-5">
         <div className="-mx-5 sm:mx-0">
           <Link href={postPathBySlug(post.slug)}>
@@ -28,34 +28,33 @@ const PostCard = ({ post }: IComponentProps) => {
                     </span>
                   </>
                 )}
-                <img
-                  src={post.featuredImage?.sourceUrl}
-                  className="shadow-sm hover:shadow-md transition-shadow duration-200"
-                />
+                <img src={post.featuredImage?.sourceUrl} className="" />
               </figure>
             </a>
           </Link>
         </div>
       </div>
-      <h3 className="text-3xl mb-3 leading-snug">
-        <Link href={postPathBySlug(post.slug)}>
-          <a className="hover:underline" dangerouslySetInnerHTML={{ __html: post.title }} />
-        </Link>
-      </h3>
-      <div className="text-lg mb-4">
-        <time dateTime={post.modified}>{formatDate(post.modified)}</time>
-      </div>
-      <div
-        className="text-lg leading-relaxed mb-4"
-        dangerouslySetInnerHTML={{ __html: sanitizeExcerpt(post.excerpt) }}
-      />
-      <div className="flex items-center">
-        <Link href={authorPathByName(post.author.name)}>
-          <a className="flex items-center">
-            <img src={post.author.avatar.url} className="w-12 h-12 rounded-full mr-4" alt={post.author.name} />
-            <div className="text-xl font-bold">{post.author.name}</div>
-          </a>
-        </Link>
+      <div className="p-6">
+        <h3 className="text-3xl mb-3 leading-snug">
+          <Link href={postPathBySlug(post.slug)}>
+            <a className="hover:underline" dangerouslySetInnerHTML={{ __html: post.title }} />
+          </Link>
+        </h3>
+        <div className="text-lg mb-4">
+          <time dateTime={post.modified}>{formatDate(post.modified)}</time>
+        </div>
+        <div
+          className="text-lg leading-relaxed mb-4"
+          dangerouslySetInnerHTML={{ __html: sanitizeExcerpt(post.excerpt) }}
+        />
+        <div className="flex items-center">
+          <Link href={authorPathByName(post.author.name)}>
+            <a className="flex items-center">
+              <img src={post.author.avatar.url} className="w-12 h-12 rounded-full mr-4" alt={post.author.name} />
+              <div className="text-xl font-bold">{post.author.name}</div>
+            </a>
+          </Link>
+        </div>
       </div>
     </div>
   );

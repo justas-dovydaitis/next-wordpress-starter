@@ -4,8 +4,8 @@
 
 html,
 body {
-  @apply bg-neutral-50;
-  @apply dark:bg-neutral-900;
-  @apply text-zinc-900;
-  @apply dark:text-zinc-100;
+  @apply bg-zinc-100;
+  @apply dark:bg-rich-black-lightest;
+  @apply text-rich-black;
+  @apply dark:text-[#f1faf3];
 }

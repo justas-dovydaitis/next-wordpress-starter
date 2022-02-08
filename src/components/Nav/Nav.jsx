@@ -178,8 +178,8 @@ const Nav = () => {
   }, []);
 
   return (
-    <nav className={styles.nav}>
-      <Section className={styles.navSection}>
+    <nav className="shadow-lg dark: dark:bg-rich-black-lighter bg-zinc-50">
+      <Section className="flex container mx-auto my-8 px-5">
         <p className={styles.navName}>
           <Link href="/">
             <a>{title}</a>

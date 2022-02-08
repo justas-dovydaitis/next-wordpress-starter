@@ -49,7 +49,7 @@ export default function Home({ posts, pagination }: IPageProps) {
 
       <Section>
         <Container>
-          {/* <h2 className="">Posts</h2> */}
+          <h2 className="font-bold text-6xl mb-8">Įrašai.</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 md:gap-y-16 lg:gap-y-32 gap-x-20 md:gap-x-32 mb-32">
             {posts.map((post, index) => {
               return <PostCard key={index} post={post} />;
